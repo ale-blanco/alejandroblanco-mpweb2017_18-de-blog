@@ -1,0 +1,7 @@
+default:
+    suites:
+        integration:
+            paths:
+                - "%paths.base%/test/BlogIntegration/Feature"
+            contexts:
+                - BlogIntegration\Context\CreatePostContext
