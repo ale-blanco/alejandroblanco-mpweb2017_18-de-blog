@@ -2,9 +2,12 @@
 
 namespace BlogUnit\Domain;
 
+use Blog\Domain\Email;
+use Blog\Domain\Password;
 use Blog\Domain\Post;
 use Blog\Domain\PostBodyNotValidException;
 use Blog\Domain\PostTitleNotValidException;
+use Blog\Domain\User;
 
 class PostTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,7 +18,8 @@ class PostTest extends \PHPUnit_Framework_TestCase
     public function shouldThrownExceptionIfTitleIsNotValid(string $title)
     {
         $this->expectException(PostTitleNotValidException::class);
-        new Post(null, $title, 'Valid body');
+        $user = new User(new Email('valid@valid.com'), new Password('valid2'));
+        new Post(null, $user, $title, 'Valid body');
     }
 
     /**
@@ -25,7 +29,8 @@ class PostTest extends \PHPUnit_Framework_TestCase
     public function shouldThrownExceptionIfBodyIsNotValid(string $body)
     {
         $this->expectException(PostBodyNotValidException::class);
-        new Post(null, 'Title valid', $body);
+        $user = new User(new Email('valid@valid.com'), new Password('valid2'));
+        new Post(null, $user, 'Title valid', $body);
     }
 
     /**
@@ -34,7 +39,8 @@ class PostTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldReturnPostIfTitleAndBodyIsValid(string $title, string $body)
     {
-        $post = new Post(null, $title, $body);
+        $user = new User(new Email('valid@valid.com'), new Password('valid2'));
+        $post = new Post(null, $user, $title, $body);
         $this->assertInstanceOf(Post::class, $post);
     }
 

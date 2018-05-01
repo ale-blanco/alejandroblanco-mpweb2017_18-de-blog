@@ -8,11 +8,12 @@ class Post
     const BODY_LIMIT = 2000;
 
     private $id;
+    private $user;
     private $title;
     private $body;
     private $published;
 
-    public function __construct(?string $id, string $title, string $body, bool $published = false)
+    public function __construct(?string $id, User $user, string $title, string $body, bool $published = false)
     {
         if ($title == '' || mb_strlen($title, 'UTF-8') > self::TITLE_LIMIT) {
             throw new PostTitleNotValidException();
@@ -23,6 +24,7 @@ class Post
         }
 
         $this->id = $id;
+        $this->user = $user;
         $this->title = $title;
         $this->body = $body;
         $this->published = $published;
@@ -36,6 +38,11 @@ class Post
     public function id(): string
     {
         return $this->id;
+    }
+
+    public function user(): User
+    {
+        return $this->user;
     }
 
     public function title(): string

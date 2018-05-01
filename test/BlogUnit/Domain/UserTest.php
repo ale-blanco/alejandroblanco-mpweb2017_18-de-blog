@@ -14,14 +14,14 @@ class UserTest extends \PHPUnit_Framework_TestCase
     private $plainPassword;
 
     /** @test */
-    public function sholdGiveMeTheOriginalEmail()
+    public function shouldGiveMeTheOriginalEmail()
     {
         $this->givenAValidUser();
         $this->thenShouldReturnOriginalEmail();
     }
 
     /** @test */
-    public function sholdGiveMeValidPassword()
+    public function shouldGiveMeValidPassword()
     {
         $this->givenAValidUser();
         $this->thenShouldReturnValidPassword();

@@ -26,7 +26,7 @@ class CreatePostTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function shoudNotSaveIfPostExist()
+    public function shouldNotSaveIfPostExist()
     {
         $this->giveMeACommandValid();
         $this->whenPostExist();
@@ -34,7 +34,7 @@ class CreatePostTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function shoudSaveButNotPublishIfSendPublishFalse()
+    public function shouldSaveButNotPublishIfSendPublishFalse()
     {
         $this->giveMeACommandValid();
         $this->whenPostNotExist();
@@ -42,7 +42,7 @@ class CreatePostTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function shoudSaveAndPublishIfSendPublishTrue()
+    public function shouldSaveAndPublishIfSendPublishTrue()
     {
         $this->giveMeACommandValid(true);
         $this->whenPostNotExist();
@@ -57,7 +57,8 @@ class CreatePostTest extends \PHPUnit_Framework_TestCase
 
     private function whenPostExist()
     {
-        $this->repository->method('findPostFromTitle')->willReturn(new Post(null,'title', 'body'));
+        $this->repository->method('findPostFromTitle')
+            ->willReturn(new Post(null, $this->command->user(), 'title', 'body'));
     }
 
     private function thenNotSaveThePost()

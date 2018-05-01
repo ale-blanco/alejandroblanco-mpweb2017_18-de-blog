@@ -20,7 +20,7 @@ class CreatePost
 
     public function __invoke(CreatePostCommand $command): Post
     {
-        $newPost = new Post(null, $command->title(), $command->body(), $command->publish());
+        $newPost = new Post(null, $command->user(), $command->title(), $command->body(), $command->publish());
         $post = $this->repository->findPostFromTitle($command->title());
         if ($post !== null) {
             return $post;

@@ -3,7 +3,6 @@
 namespace BlogIntegration\Context;
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use Blog\Application\CreatePost;
 use Blog\Application\CreatePostCommand;
 use Blog\Domain\Email;
@@ -30,7 +29,7 @@ class CreatePostContext implements Context
     {
         $title = 'Title';
         $this->createCommandRepositoryAndQueue($title, false);
-        $this->repository->save(new Post(null, $title, 'Other Body'));
+        $this->repository->save(new Post(null, $this->command->user(), $title, 'Other Body'));
     }
 
     /**
