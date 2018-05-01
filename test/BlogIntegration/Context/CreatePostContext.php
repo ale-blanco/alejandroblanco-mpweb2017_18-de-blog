@@ -8,7 +8,9 @@ use Blog\Application\CreatePostCommand;
 use Blog\Domain\Email;
 use Blog\Domain\Password;
 use Blog\Domain\Post;
+use Blog\Domain\PostBodyNotValidException;
 use Blog\Domain\PostCreatedEvent;
+use Blog\Domain\PostTitleNotValidException;
 use Blog\Domain\User;
 use Blog\Infrastructure\MemoryEventQueue;
 use Blog\Infrastructure\MemoryPostRepository;
@@ -86,11 +88,57 @@ class CreatePostContext implements Context
         $this->thePostIsSaved();
     }
 
-    private function createCommandRepositoryAndQueue(string $title, bool $publish)
+    /**
+     * @Given /^a not valid title post (.*)$/
+     */
+    public function aNotValidTitlePost($title)
+    {
+        $this->createCommandRepositoryAndQueue($title, false);
+    }
+
+    /**
+     * @Then /^executing the use case and the post thrown an exception TitleNotValid$/
+     */
+    public function executingTheUseCaseAndThePostThrownAnExceptionTitleNotValid()
+    {
+        $resul = $this->createPostWithTry();
+        PHPUnit_Framework_Assert::assertTrue($resul instanceof PostTitleNotValidException);
+    }
+
+    /**
+     * @Given /^a not valid body post (.*)$/
+     */
+    public function aNotValidBodyPost($body)
+    {
+        $this->createCommandRepositoryAndQueue('Titulo valido', false, $body);
+    }
+
+    /**
+     * @Then /^executing the use case and the post thrown an exception BodyNotValid$/
+     */
+    public function executingTheUseCaseAndThePostThrownAnExceptionBodyNotValid()
+    {
+        $resul = $this->createPostWithTry();
+        PHPUnit_Framework_Assert::assertTrue($resul instanceof PostBodyNotValidException);
+    }
+
+    private function createCommandRepositoryAndQueue(string $title, bool $publish, string $body = 'Body')
     {
         $user = new User(new Email('valid@valid.com'), new Password('valid2'));
-        $this->command = new CreatePostCommand($title, 'Body', $publish, $user);
+        $this->command = new CreatePostCommand($title, $body, $publish, $user);
         $this->repository = new MemoryPostRepository();
         $this->queue = new MemoryEventQueue();
+    }
+
+    private function createPostWithTry()
+    {
+        $resul = null;
+        $createPost = new CreatePost($this->repository, $this->queue);
+        try {
+            $this->resul = $createPost->__invoke($this->command);
+        } catch (\Exception $ex) {
+            $resul = $ex;
+        }
+        return $resul;
     }
 }
